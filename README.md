@@ -1,0 +1,1 @@
+Para realizar esta tarea debe conectarse a MongoDB, utilizar la conexion y pegarlo en el archivo .env que es donde se almacena la URL de la conexion a la base de datos. Tener instalado POSTMAN para realizar las operaciones como: Get, Post, Put, Delete y GetByID.
