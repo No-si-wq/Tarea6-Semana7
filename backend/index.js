@@ -1,29 +1,50 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import colors from 'colors';
-import { db } from './config/db.js';
-import servicesRoutes from './routes/servicesRoutes.js';
+import express from 'express'
+import dotenv from 'dotenv'
+import colors from 'colors'
+import cors from 'cors'
+import { db } from './config/db.js'
+import servicesRoutes from './routes/servicesRoutes.js'
 
-//Variables de entorno
+// Variables de Entorno
 dotenv.config()
 
-//Configuracion de la app
+//Conguracion de la app
 const app = express()
 
 //Leer datos via body
 app.use(express.json())
 
 //Conectar a la base de datos
-db();
+db() 
 
-//Definicion de la ruta
-app.use('/api/services', servicesRoutes);
+//Configuracion del CORS
+const whitelist = [process.env.FRONTEND_URL]
 
-//Definicion del puerto
-const PORT = process.env.PORT || 4000
+if(process.argv[2] === '--postman'){
+    whitelist.push(undefined)
+}
 
-//Ejecucion la app
+const corsOption = {
+    origin: function(origin, callback){
+        if(whitelist.includes(origin)){
+            //Permitir Conexion
+            callback(null, true)
+        }else{
+            //No Permitir Conexion 
+            callback(new Error('Error de CORS'))
+        }
+    }
+}
+app.use(cors(corsOption))
+
+//Definicion de ruta
+app.use('/api/services', servicesRoutes)
+
+//Definicion de puerto
+const PORT = process.env.PROT || 4001
+
+//ejecutar la app
 app.listen(PORT, () => {
-  console.log(colors.blue('El servidor se esta ejecutando en el puerto: ', PORT));
+    console.log(colors.blue('El Sevidor se esta ejecutando en el puerto:', PORT))
 })
 
